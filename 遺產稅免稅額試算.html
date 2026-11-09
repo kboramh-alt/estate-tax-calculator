@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>遺產稅免稅額試算</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--tx:#1d1d1b;--mut:#8a8a84;--bd:#cfcfc9;--in:#dbe9f7;--ok:#e2f0d9;--acc:#2f6f4f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151514;--card:#212120;--tx:#ecece7;--mut:#8f8f89;--bd:#3b3b38;--in:#26384a;--ok:#2a4430;--acc:#86cda5}}
+:root[data-theme="dark"]{--bg:#151514;--card:#212120;--tx:#ecece7;--mut:#8f8f89;--bd:#3b3b38;--in:#26384a;--ok:#2a4430;--acc:#86cda5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 14px 40px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13px;margin:0 0 16px}
+.wrap{overflow-x:auto;margin-bottom:18px}
+table{border-collapse:collapse;width:100%;background:var(--card)}
+th,td{border:1px solid var(--bd);padding:0;text-align:center;height:34px}
+th{font-weight:500;padding:0 8px;background:var(--card)}
+td.l{padding:0 10px;white-space:nowrap}
+input{width:100%;box-sizing:border-box;border:0;background:transparent;color:inherit;font:inherit;text-align:center;padding:6px 8px;height:34px;outline:none}
+input:focus{box-shadow:inset 0 0 0 2px var(--acc)}
+td.inp{background:var(--in)}
+tr.on td,tr.on td.inp{background:var(--ok)}
+tr.off td{color:var(--mut);font-style:italic}
+tr.off input{color:var(--mut);font-style:italic}
+tr[data-core] td{height:44px;font-weight:700}
+tr[data-core] input{height:44px;font-size:16px;font-weight:700}
+tr[data-core] td:first-child{border-left:4px solid var(--acc)}
+tr[data-core]:nth-child(2)+tr td{border-top:2px solid var(--acc)}
+.top td:first-child{width:38%}
+.top td.v{font-variant-numeric:tabular-nums}
+.big td{font-weight:600}
+.top.ins td.l{width:24%;white-space:normal}
+.cmp th{font-size:13px;line-height:1.3;padding:6px 8px}
+.cmp td{padding:0 10px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cmp td.l,.cmp td[rowspan]{text-align:center}
+.cmp tr.tot td{font-weight:700;border-top:2px solid var(--acc)}
+.up{color:var(--acc);font-weight:600}
+#ex{table-layout:fixed;min-width:420px}
+#ex th:nth-child(1){width:25%}
+#ex th:nth-child(2){width:28%}
+#ex th:nth-child(3){width:12%}
+#ex th:nth-child(4){width:35%}
+.cmp{--hd:#e6edf6;--lb:#f2f5f9;--tt:#e3edfb;--up:#1f6fd1;--dn:#d9534f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cmp{--hd:#2a3545;--lb:#252a31;--tt:#2a3b52;--up:#6aa9ff;--dn:#ff7b72}}
+:root[data-theme="dark"] .cmp{--hd:#2a3545;--lb:#252a31;--tt:#2a3b52;--up:#6aa9ff;--dn:#ff7b72}
+.cmp td{text-align:center}
+.cmp th{background:var(--hd)}
+.cmp td.l,.cmp td[rowspan]{background:var(--lb)}
+.cmp tr.tot td{background:var(--tt);border-top:2px solid var(--up)}
+.cmp .up{color:var(--up);font-weight:700}
+.cmp .dn{color:var(--dn);font-weight:700}
+.lock{max-width:320px;margin:30px auto;text-align:center}
+.lock .row{display:flex;gap:8px}
+.lock input{border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+.cmp tr.sp td{height:10px;padding:0}
+.cmp small{color:var(--mut);font-size:11px}
+.dn{color:#d9534f}
+.unit{font-size:12px;color:var(--mut);margin:-10px 0 14px}
+button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:6px 14px;cursor:pointer}
+.note{color:var(--mut);font-size:12.5px;margin-top:14px}
+.tabs{display:flex;gap:6px;margin:0 0 16px;border-bottom:1px solid var(--bd)}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;padding:10px 14px;color:var(--mut);font-weight:600}
+.tabs button[aria-selected="true"]{color:var(--tx);border-bottom-color:var(--acc)}
+</style>
+</head>
+<body>
+<main>
+<h1>遺產稅免稅額試算</h1>
+<p class="sub">藍色格為可輸入欄位；金額單位依遺產總額自動切換。</p>
+
+<div class="tabs" role="tablist">
+<button role="tab" aria-selected="true" data-p="p2">免稅額與稅額</button>
+<button role="tab" aria-selected="false" data-p="p1">保單資料</button>
+<button role="tab" aria-selected="false" data-p="p3">🔒 加密區</button>
+</div>
+
+<section id="p1" hidden>
+<div class="wrap"><table class="top ins">
+<tr><td class="l">目前身故保障</td><td class="inp" colspan="3"><input id="D" inputmode="numeric"></td></tr>
+</table></div>
+
+<div class="wrap"><table class="top ins">
+<tr><td class="l">美金匯率</td><td class="inp" colspan="3"><input id="FX" inputmode="decimal"></td></tr>
+<tr><td class="l">規劃總保費(美金)</td><td class="inp"><input id="P" inputmode="numeric"></td><td class="l">理賠金(美金)</td><td class="inp"><input id="C" inputmode="numeric"></td></tr>
+<tr><td class="l">台幣約</td><td class="v" id="P2"></td><td class="l">台幣約</td><td class="v" id="C2"></td></tr>
+</table></div>
+
+<div class="wrap"><table class="cmp">
+<thead><tr><th>假設目前<br>資產淨額</th><th>現況</th><th>規劃保險<br>(列入課稅)</th><th>規劃保險<br>(未列入課稅)</th></tr></thead>
+<tbody id="cmpb"></tbody>
+</table></div>
+</section>
+
+<section id="p2">
+<div class="wrap"><table class="top"><tr><td class="l">遺產總額</td><td class="inp"><input id="E" inputmode="numeric"></td></tr></table></div>
+
+<div class="wrap"><table id="ex">
+<thead><tr><th>免稅項目</th><th>免稅額</th><th>單位</th><th>總額</th></tr></thead>
+<tbody></tbody>
+</table></div>
+
+<div class="wrap"><table class="top big">
+<tr><td class="l">免稅額度</td><td class="v" id="sumEx"></td></tr>
+<tr><td class="l">遺產淨額</td><td class="v" id="net"></td></tr>
+</table></div>
+
+<div class="wrap"><table id="tax">
+<thead><tr><th>課稅遺產淨額</th><th>稅率 %</th><th>應稅金額</th></tr></thead>
+<tbody>
+<tr><td><input data-t="0" inputmode="numeric"></td><td><input data-r="0" inputmode="decimal"></td><td id="t0"></td></tr>
+<tr><td><input data-t="1" inputmode="numeric"></td><td><input data-r="1" inputmode="decimal"></td><td id="t1"></td></tr>
+<tr><td>超過部分</td><td><input data-r="2" inputmode="decimal"></td><td id="t2"></td></tr>
+<tr class="big"><td colspan="2">合計</td><td id="tt"></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="p3" hidden>
+<div id="lock" class="lock">
+<p>此頁籤需要密碼</p>
+<div class="row"><input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="輸入密碼"><button id="unlock">解鎖</button></div>
+<p id="pwerr" class="dn" hidden>密碼錯誤</p>
+</div>
+<div id="vault" hidden>
+<div id="vbody" class="wrap"></div>
+<button id="relock">重新上鎖</button>
+</div>
+</section>
+
+<button id="reset">還原預設值</button>
+<p class="note">邏輯對應原 Excel「效益表」A 到 D 欄：總額 = 免稅額 × 單位；免稅額度 = 總額加總；遺產淨額 = 遺產總額 − 免稅額度；稅額依級距分段計算並無條件捨去。單位未填的項目會變灰，不計入。</p>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+const INIT=[["一般免稅",13330000,1],["喪葬費",1380000,1],["配偶",5530000,1],["直系血親",560000,2],["父母",1380000,""]];
+let S;
+function fresh(){
+  S={E:0,D:0,FX:32.45,P:1000000,C:1555864,T:[56210000,112420000],R:[10,15,20],rows:[]};
+  for(let i=0;i<16;i++){const r=INIT[i];S.rows.push(r?{n:r[0],b:r[1],c:r[2]}:{n:"",b:"",c:""});}
+}
+const num=v=>{const x=parseFloat(String(v).replace(/,/g,""));return isNaN(x)?0:x};
+const com=v=>Math.round(v).toLocaleString("en-US");
+const com2=v=>(Math.round(v*100)/100).toLocaleString("en-US",{maximumFractionDigits:2});
+function fmt(v,w){
+  if(!v)return"-";
+  const a=Math.abs(v),s=(w||S.E>=1e8)?(Math.round(a/1000)/10).toFixed(1)+"萬":com(a/1000)+"千";
+  return(v<0?"-":"")+s;
+}
+// 綁定數字輸入：聚焦顯示原值，離開顯示格式化
+function bind(el,get,set,disp){
+  el.addEventListener("focus",()=>{const v=get();el.value=v===""?"":v;el.select()});
+  el.addEventListener("input",()=>{set(el.value);update()});
+  el.addEventListener("blur",()=>{el.value=disp(get())});
+}
+const rowEls=[];
+function build(){
+  const tb=$("#ex tbody");tb.innerHTML="";rowEls.length=0;
+  S.rows.forEach((r,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML='<td><input></td><td><input inputmode="numeric"></td><td class="inp"><input inputmode="numeric"></td><td></td>';
+    const [a,b,c]=tr.querySelectorAll("input");
+    a.value=r.n;a.oninput=()=>{r.n=a.value;update()};
+    if(i<2){tr.dataset.core=1;a.readOnly=true}
+    bind(b,()=>r.b,v=>r.b=v===""?"":num(v),v=>v===""?"":com(num(v)));
+    bind(c,()=>r.c,v=>r.c=v===""?"":num(v),v=>v);
+    tb.appendChild(tr);rowEls.push({tr,a,b,c,d:tr.children[3]});
+  });
+  const E=$("#E");bind(E,()=>S.E,v=>S.E=num(v),v=>com(v));
+  bind($("#D"),()=>S.D,v=>S.D=num(v),v=>com(v));
+  bind($("#FX"),()=>S.FX,v=>S.FX=num(v),v=>String(v));
+  bind($("#P"),()=>S.P,v=>S.P=num(v),v=>com(v));
+  bind($("#C"),()=>S.C,v=>S.C=num(v),v=>com(v));
+  document.querySelectorAll("[data-t]").forEach(el=>{const k=+el.dataset.t;bind(el,()=>S.T[k],v=>S.T[k]=num(v),v=>com(v))});
+  document.querySelectorAll("[data-r]").forEach(el=>{const k=+el.dataset.r;bind(el,()=>S.R[k],v=>S.R[k]=num(v),v=>v+"%")});
+}
+function sync(){ // 重新填入顯示值（初始化 / 還原用）
+  $("#E").value=com(S.E);$("#D").value=com(S.D);$("#FX").value=S.FX;$("#P").value=com(S.P);$("#C").value=com(S.C);
+  document.querySelectorAll("[data-t]").forEach(el=>el.value=com(S.T[+el.dataset.t]));
+  document.querySelectorAll("[data-r]").forEach(el=>el.value=S.R[+el.dataset.r]+"%");
+  S.rows.forEach((r,i)=>{const e=rowEls[i];e.b.value=r.b===""?"":com(num(r.b));e.c.value=r.c});
+}
+function update(){
+  let sum=0;
+  S.rows.forEach((r,i)=>{
+    const e=rowEls[i],d=num(r.b)*num(r.c);sum+=d;
+    e.d.textContent=fmt(d,true);
+    
+    if(document.activeElement!==e.b)e.b.value=r.b===""?"":com(num(r.b));
+  });
+  const net=S.E-sum,[x,y]=S.T,[p,q,o]=S.R.map(v=>v/100);
+  const t0=net<=0?0:(net<=x?net*p:x*p);
+  const t1=net>x?(net>y?(y-x)*q:(net-x)*q):0;
+  const t2=net>y?(net-y)*o:0;
+  $("#P2").textContent=com2(S.P*S.FX);$("#C2").textContent=com2(S.C*S.FX);
+  $("#sumEx").textContent=com(sum);$("#net").textContent=com(net);
+  $("#t0").textContent=com(t0);$("#t1").textContent=com(t1);$("#t2").textContent=com(t2);
+  $("#tt").textContent=com(Math.floor(t0+t1+t2));
+  renderCmp(sum);vCalc();
+}
+const fl=v=>Math.floor(+v.toFixed(6));
+function taxOf(n){
+  const [x,y]=S.T,[p,q,o]=S.R.map(v=>v/100);
+  const a=n<=0?0:(n<=x?n*p:x*p),b=n>x?(n>y?(y-x)*q:(n-x)*q):0,c=n>y?(n-y)*o:0;
+  return fl(a+b+c);
+}
+function renderCmp(ex){
+  const prem=fl(S.P*S.FX),claim=fl(S.C*S.FX),D=S.D;
+  const t0=taxOf(S.E-ex),t1=taxOf(claim+S.E-ex);
+  const tax=[t0,t1,t0],base=[S.E,S.E-prem,S.E-prem],fee=[0,prem,prem],pay=[D,claim+D,claim+D];
+  const inh=base.map((v,i)=>v+pay[i]-tax[i]);
+  const n=v=>v<0?`<span class="dn">(${com(-v)})</span>`:com(v);
+  const row=(l,a,c="")=>`<tr class="${c}"><td class="l">${l}</td>${a.map(v=>`<td>${n(v)}</td>`).join("")}</tr>`;
+  const d1=inh[1]-inh[0],d2=inh[2]-inh[0];
+  const lab=d=>d>0?'<span class="up">增值</span>':'<span class="dn">減少</span>';
+  const amt=d=>(d<0?"-":"")+"$"+com(Math.abs(d));
+  $("#cmpb").innerHTML=row("應稅資產",base)+row("保險費",fee)+row("保險給付",pay)+row("遺產稅",tax)+row("繼承金額",inh,"tot")
+    +`<tr><td class="l" rowspan="2">規劃效益</td><td rowspan="2">資產縮水</td><td>${lab(d1)}</td><td>${lab(d2)}</td></tr><tr><td>${amt(d1)}</td><td>${amt(d2)}</td></tr>`;
+}
+fresh();build();sync();update();
+$("#reset").onclick=()=>{fresh();build();sync();update()};
+const tabs=document.querySelectorAll("[role=tab]");
+tabs.forEach(t=>t.onclick=()=>{tabs.forEach(x=>{const on=x===t;x.setAttribute("aria-selected",on);$("#"+x.dataset.p).hidden=!on})});
+var V=null;
+const ENC="AhKH8OW53pmTOM/8YYOraJyxxuvYDydfR9koDSzZ6wP2ngPaJwWMKoRaViptllittY8ifxBMJRAaMFtHU051xTtRXPuO5YbbzNCdxXM8p4Ypd6HFZyxpFzmwwZAZS6ROu9gnggT2HN9zNg3Yj3s8yhtYTT2gQreer7MYdHaAvk+lkJKyyqN//luWjfi+I1mjWUwZldWXDMyDLp8kwDjuwHtZo3RlC8DK7X0CctonE6QpCBHxAZ+Mbtub7ETOMGNZazxw1MUfNHxO5R98YEk+P8mHoXCrCthENVsKSKVPcrNgdHOq/kk6AnbseFCAwv5Ifkl6U4iMGsl3BI492pRlfC4xbugbd/oN1OFIKkqAMBF9o2XjeYNFnEHVK7KDKnvBsEyEE2QrfnoCBGPdVC5ctUFZbxApRvs0O5h0F92YtVb5tcv9wAK8BiWuu638X73LfNvdkMSUtfsiH4NssE5HR///rBkwtQAwM03Gp3U=";
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function keyOf(pw){
+  const enc=new TextEncoder();
+  const k=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:enc.encode("estate-vault-enc-v2"),iterations:100000,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["decrypt"]);
+}
+function buildVault(){
+  const P=V.prods;
+  const inp=(f,i)=>`<td><input data-vf="${f}" data-vi="${i}" inputmode="decimal" value="${P[i][f]}"></td>`;
+  const sp='<tr class="sp"><td colspan="5"></td></tr>';
+  let h='<table class="cmp"><thead><tr><th colspan="5">換算 ＆ 佣金</th></tr></thead><tbody>';
+  h+=`<tr><td class="l">商品</td><td colspan="2">${P[0].p}</td><td colspan="2">${P[2].p}</td></tr>`;
+  h+=`<tr><td class="l">年期</td>${P.map(x=>`<td>${x.t}</td>`).join("")}</tr>`;
+  h+=`<tr><td class="l">保費(美)</td>${P.map((_,i)=>inp("usd",i)).join("")}</tr>`;
+  h+=`<tr><td class="l">保費(台)<br><small>參考<span id="vfx"></span></small></td>${P.map((_,i)=>`<td id="vt${i}"></td>`).join("")}</tr>`;
+  [["換算","conv","a"],["激勵","inc","b"],["佣","com","c"]].forEach(([l,f,k])=>{
+    h+=sp+`<tr><td class="l">${l}</td>${P.map((_,i)=>inp(f,i)).join("")}</tr>`;
+    V.r.forEach((_,j)=>{h+=`<tr><td class="l">${V.m[j]}</td>${P.map((_,i)=>`<td id="v${k}${j}_${i}"></td>`).join("")}</tr>`});
+  });
+  h+=sp+'<tr><td class="l" colspan="5">備註：</td></tr>';
+  V.r.forEach((r,j)=>{h+=`<tr><td class="l">${V.m[j]}換算</td><td><input data-vr="${j}" inputmode="decimal" value="${r}"></td><td colspan="3"></td></tr>`});
+  $("#vbody").innerHTML=h+"</tbody></table>";
+  $("#vbody").oninput=e=>{
+    const d=e.target.dataset,v=parseFloat(e.target.value)||0;
+    if(d.vf)V.prods[+d.vi][d.vf]=v;else if(d.vr!==undefined)V.r[+d.vr]=v;
+    vCalc();
+  };
+  vCalc();
+}
+function vCalc(){
+  if(!V)return;
+  $("#vfx").textContent=S.FX;
+  V.prods.forEach((x,i)=>{
+    $("#vt"+i).textContent=com2(x.usd*S.FX);
+    V.r.forEach((r,j)=>{
+      $(`#va${j}_${i}`).textContent=com(fl(x.usd*x.conv*r));
+      $(`#vb${j}_${i}`).textContent=com(fl(x.usd*x.conv*x.inc*r));
+      $(`#vc${j}_${i}`).textContent=com(fl(x.usd*x.com*r));
+    });
+  });
+}
+async function tryUnlock(){
+  const err=$("#pwerr");err.hidden=true;err.textContent="密碼錯誤";
+  try{
+    const raw=b64(ENC),key=await keyOf($("#pw").value);
+    let buf;
+    try{buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:raw.slice(0,12)},key,raw.slice(12))}catch(e2){err.hidden=false;return}
+    V=JSON.parse(new TextDecoder().decode(buf));
+    $("#lock").hidden=true;$("#vault").hidden=false;$("#pw").value="";buildVault();
+  }catch(e){err.textContent="此瀏覽器無法驗證密碼";err.hidden=false}
+}
+$("#unlock").onclick=tryUnlock;
+$("#pw").onkeydown=e=>{if(e.key==="Enter")tryUnlock()};
+$("#relock").onclick=()=>{V=null;$("#vbody").innerHTML="";$("#vault").hidden=true;$("#lock").hidden=false};
+</script>
+</body>
+</html>
